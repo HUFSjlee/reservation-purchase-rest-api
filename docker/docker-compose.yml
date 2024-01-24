@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+  rds:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./rds.sql:/docker-entrypoint-initdb.d/rds.sql
+    environment:
+      MYSQL_DATABASE: hufsjlee
+      MYSQL_USER: hufsjlee
+      MYSQL_PASSWORD: 123123
+      MYSQL_ROOT_PASSWORD: 123123
+      TZ: UTC
