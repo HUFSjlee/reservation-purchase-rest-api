@@ -2,6 +2,9 @@
 예약-구매 서비스 REST API를 개발하고, 고도화를 목표로 합니다 :)
 
 ## 🔎docker-compose 명령어
+
+**프로젝트 내 start.sh / stop.sh 파일을 추가해서 명령어 입력 없이 실행 가능합니다.**
+
 **f 옵션**
 
 우선 기본적으로 docker compose 명령어는 docker-compose.yml 파일이 있는 위치에서 실행해야 한다. 만약 실행 위치에 docker-compose.yml 파일이 없거나, 이름이 다르다면 -f 옵션을 통해 파일 경로를 주어야 한다.
