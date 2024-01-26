@@ -1,15 +1,17 @@
-package com.reservationpurchase.reservationpurchase.module.presentation.controller;
+package com.reservationpurchase.reservationpurchase.module.member.presentation.controller;
 
 import com.reservationpurchase.reservationpurchase.common.response.BaseResponse;
-import com.reservationpurchase.reservationpurchase.module.domain.entity.Member;
-import com.reservationpurchase.reservationpurchase.module.domain.service.MemberService;
-import com.reservationpurchase.reservationpurchase.module.presentation.dto.MemberDTO;
+import com.reservationpurchase.reservationpurchase.module.member.domain.entity.Member;
+import com.reservationpurchase.reservationpurchase.module.member.domain.service.MemberService;
+import com.reservationpurchase.reservationpurchase.module.member.presentation.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/members")

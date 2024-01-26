@@ -1,27 +1,37 @@
 spring:
-  # ??? ?? ??? ??x, ?? ???????. ????? docker-compose???? ?? ??
-  #  datasource:
-  #    driver-class-name: com.mysql.cj.jdbc.Driver
-  #    url: jdbc:mysql://database:3306/users_db?useSSL=false
-  #    username: root
-  #    password: '1234'
-
-
-  jpa:
-    open-in-view: true
-    hibernate:
-      ddl-auto: create
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-        use-new-id-generator-mappings: false
-    show-sql: true
-    properties:
-      hibernate.format_sql: true
-      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-
-
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/hufsjlee
     username: hufsjlee
     password: 123123
+  jpa:
+    database: mysql
+    hibernate: # hibernate 사용 설정
+      ddl-auto: create #create, alter, drop, truncate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        show_sql: true
+        default_batch_fetch_size: 1000
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: deepsj1012@gmail.com
+    password: tmsjfowgnmhgtzaw
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+

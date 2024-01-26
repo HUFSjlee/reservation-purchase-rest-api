@@ -1,4 +1,4 @@
-package com.reservationpurchase.reservationpurchase.module.presentation.dto;
+package com.reservationpurchase.reservationpurchase.module.member.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

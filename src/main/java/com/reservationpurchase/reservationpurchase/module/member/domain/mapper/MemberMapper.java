@@ -1,8 +1,7 @@
-package com.reservationpurchase.reservationpurchase.module.domain.mapper;
+package com.reservationpurchase.reservationpurchase.module.member.domain.mapper;
 
-import com.reservationpurchase.reservationpurchase.common.base.BaseEntity;
-import com.reservationpurchase.reservationpurchase.module.domain.entity.Member;
-import com.reservationpurchase.reservationpurchase.module.presentation.dto.MemberDTO;
+import com.reservationpurchase.reservationpurchase.module.member.domain.entity.Member;
+import com.reservationpurchase.reservationpurchase.module.member.presentation.dto.MemberDTO;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

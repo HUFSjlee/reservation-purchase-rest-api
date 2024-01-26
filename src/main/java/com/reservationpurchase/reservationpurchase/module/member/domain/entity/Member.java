@@ -1,4 +1,4 @@
-package com.reservationpurchase.reservationpurchase.module.domain.entity;
+package com.reservationpurchase.reservationpurchase.module.member.domain.entity;
 
 import com.reservationpurchase.reservationpurchase.common.base.BaseEntity;
 import jakarta.persistence.*;

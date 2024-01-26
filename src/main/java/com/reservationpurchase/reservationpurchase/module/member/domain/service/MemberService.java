@@ -1,14 +1,16 @@
-package com.reservationpurchase.reservationpurchase.module.domain.service;
+package com.reservationpurchase.reservationpurchase.module.member.domain.service;
 
-import com.reservationpurchase.reservationpurchase.module.domain.entity.Member;
-import com.reservationpurchase.reservationpurchase.module.domain.mapper.MemberMapper;
-import com.reservationpurchase.reservationpurchase.module.infrastructure.MemberRepository;
-import com.reservationpurchase.reservationpurchase.module.presentation.dto.MemberDTO;
+import com.reservationpurchase.reservationpurchase.module.member.domain.entity.Member;
+import com.reservationpurchase.reservationpurchase.module.member.domain.mapper.MemberMapper;
+import com.reservationpurchase.reservationpurchase.module.member.infrastructure.MemberRepository;
+import com.reservationpurchase.reservationpurchase.module.member.presentation.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {
