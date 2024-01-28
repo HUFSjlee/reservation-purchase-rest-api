@@ -6,6 +6,7 @@ import com.reservationpurchase.reservationpurchase.module.member.infrastructure.
 import com.reservationpurchase.reservationpurchase.module.member.presentation.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,13 +17,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public MemberDTO.CreateResponse create(MemberDTO.CreateRequest request) {
+    public MemberDTO.CreateResponse signUp(MemberDTO.CreateRequest request) throws Exception {
         var member = memberMapper.toEntity(request);
-        var savedEntity = memberRepository.save(member);
+
+        if (memberRepository.findByMemberEmail(member.getMemberEmail()).isPresent()){
+            throw new Exception("이미 가입하신 이메일입니다.");
+        }
+
+        member.encodePassword(passwordEncoder);
+
+        var savedMember = memberRepository.save(member);
+
         return MemberDTO.CreateResponse.builder()
-                .id(savedEntity.getId())
+                .id(savedMember.getId())
                 .build();
     }
 

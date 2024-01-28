@@ -12,4 +12,4 @@ services:
       MYSQL_USER: hufsjlee
       MYSQL_PASSWORD: 123123
       MYSQL_ROOT_PASSWORD: 123123
-      TZ: UTC
+      TZ: ASIA/SEOUL

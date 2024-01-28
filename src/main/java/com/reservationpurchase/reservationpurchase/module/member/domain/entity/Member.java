@@ -2,15 +2,13 @@ package com.reservationpurchase.reservationpurchase.module.member.domain.entity;
 
 import com.reservationpurchase.reservationpurchase.common.base.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @Entity
 @SuperBuilder
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Table(name = "member")
@@ -37,4 +35,7 @@ public class Member extends BaseEntity {
 
     //following 컬럼 추가해야함
 
+    public void encodePassword(PasswordEncoder passwordEncoder) {
+        this.memberPassword = passwordEncoder.encode(this.memberPassword);
+    }
 }
