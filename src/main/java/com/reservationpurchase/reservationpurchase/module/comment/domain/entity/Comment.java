@@ -1,7 +1,6 @@
 package com.reservationpurchase.reservationpurchase.module.comment.domain.entity;
 
 import com.reservationpurchase.reservationpurchase.module.comment.presentation.dto.CommentPutRequestDTO;
-import com.reservationpurchase.reservationpurchase.module.follow.domain.entity.Follow;
 import com.reservationpurchase.reservationpurchase.module.like.domain.entity.Like;
 import com.reservationpurchase.reservationpurchase.module.post.domain.entity.Post;
 import jakarta.persistence.*;

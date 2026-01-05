@@ -3,7 +3,6 @@ package com.reservationpurchase.reservationpurchase.module.post.domain.entity;
 import com.reservationpurchase.reservationpurchase.common.base.BaseEntity;
 import com.reservationpurchase.reservationpurchase.module.comment.domain.entity.Comment;
 import com.reservationpurchase.reservationpurchase.module.like.domain.entity.Like;
-import com.reservationpurchase.reservationpurchase.module.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

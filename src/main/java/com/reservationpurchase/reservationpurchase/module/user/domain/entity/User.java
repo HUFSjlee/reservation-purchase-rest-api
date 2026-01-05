@@ -9,7 +9,6 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -24,7 +23,6 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "user_id")
     private Long id;
 
-    //팔로우
     @OneToMany(mappedBy = "following", fetch = FetchType.LAZY)
     private List<Follow> followings;
 
@@ -39,6 +37,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "user_email")
     private String userEmail;
+
     @Column(name = "user_password")
     private String userPassword;
 

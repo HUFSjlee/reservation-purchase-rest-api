@@ -5,11 +5,9 @@ import com.reservationpurchase.reservationpurchase.module.newsfeed.infrastructur
 import com.reservationpurchase.reservationpurchase.module.newsfeed.presentation.dto.NewsfeedDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @Service
 @RequiredArgsConstructor
@@ -21,13 +19,7 @@ public class NewsfeedService {
         List<Long> followList = new ArrayList<>();
         followList.add(3L);
         List<Newsfeed> all = newsfeedRepository.findByUserIdOrContentProvider(request.getUserId(),followList);
-
         List<String> newsFeedMsg = all.stream().map(Newsfeed::getMessage).collect(Collectors.toList());
-
-//        NewsfeedDTO.CreateResponse response = NewsfeedDTO.CreateResponse.builder()
-//                .userIds(userIds)
-//                .build();
-
         return newsFeedMsg;
     }
 

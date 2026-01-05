@@ -8,7 +8,6 @@ import com.reservationpurchase.reservationpurchase.module.user.domain.service.Fi
 import com.reservationpurchase.reservationpurchase.module.user.domain.service.UserService;
 import com.reservationpurchase.reservationpurchase.module.user.presentation.dto.SignInDto;
 import com.reservationpurchase.reservationpurchase.module.user.presentation.dto.UserDTO;
-import io.swagger.annotations.ApiOperation;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +51,6 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    @ApiOperation(value="로그인")
     public ResponseEntity<String> login(@Valid @RequestBody UserDTO.CreateRequest request) {
 
         return ResponseEntity.ok(userService.login(request));
@@ -60,10 +58,6 @@ public class UserController {
 
     @PutMapping("/set-profile-image")
     public ResponseEntity<String> setProfileImage(@RequestParam("file") MultipartFile file, @RequestParam("email") String email) throws IOException, FirebaseAuthException {
-        //토큰 검증 먼저
-        // USERDTO.RE response = jwtTokenProvider.getUserInfo(token);
-        // response 들고 DB가서 정보를 가져오든 or
-        // 이미 response가 원하는 정보를 가지고 있다면 imageurl 업데이트 실행 seq ...
         String imageUrl = userService.uploadAndSaveProfileImage(file, "someName", createRequestWithProfileImage(email));
         return ResponseEntity.ok().body(imageUrl);
     }

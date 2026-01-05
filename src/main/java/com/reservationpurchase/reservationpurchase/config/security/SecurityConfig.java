@@ -39,34 +39,8 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class).build();
     }
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-//        return httpSecurity
-//                .httpBasic().disable()
-//                .csrf().disable()
-//                .cors()
-//                .and()
-////                .authorizeHttpRequests()
-//                //.requestMatchers("/auth/**","/exc","/swagger-ui/**","/v3/**").permitAll()
-//                //.requestMatchers(HttpMethod.GET,"/exc","/routines/**").permitAll()
-//                //.requestMatchers("/members/**","/member-event","/personal-trainings/{ptSeq}/review","/openvidu/**","/exercise-history/*").hasAuthority("member")
-//                //.requestMatchers("/exercises/*","/routines").hasAuthority("admin")
-//                //.requestMatchers("/trainer","/personal-trainings","/openvidu/**","/trainer-feedbacks").hasAuthority("trainer")
-////                .and()
-//                .authorizeHttpRequests()
-//                //.anyRequest().authenticated()
-//                .anyRequest().permitAll()
-//                .and()
-//                //.addFilterBefore(filterFactory.testAuthorization(), BasicAuthenticationFilter.class)
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .build();
-//    }
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
-
 }

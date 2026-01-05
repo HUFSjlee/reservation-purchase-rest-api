@@ -27,9 +27,7 @@ public class PageResponse<T> {
     public void setPage(String totalCount) {
         this.totalCount = totalCount;
     }
-
     public void setItems(List<T> items) {
         this.items = items;
     }
-
 }
