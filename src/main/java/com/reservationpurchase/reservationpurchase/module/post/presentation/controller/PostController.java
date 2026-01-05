@@ -1,7 +1,6 @@
 package com.reservationpurchase.reservationpurchase.module.post.presentation.controller;
 
 import com.reservationpurchase.reservationpurchase.common.response.BaseResponse;
-import com.reservationpurchase.reservationpurchase.common.response.PageResponse;
 import com.reservationpurchase.reservationpurchase.module.post.domain.entity.Post;
 import com.reservationpurchase.reservationpurchase.module.post.domain.service.PostService;
 import com.reservationpurchase.reservationpurchase.module.post.presentation.dto.PostDTO;

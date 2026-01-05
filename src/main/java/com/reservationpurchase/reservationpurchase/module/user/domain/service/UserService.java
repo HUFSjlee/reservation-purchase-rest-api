@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 
 @Service
@@ -97,11 +96,6 @@ public class UserService {
     @Transactional
     public UserDTO.UpdateResponse update(Long id, UserDTO.UpdateRequest request) {
         User user = userRepository.findById(id).orElseThrow(()-> new UsernameNotFoundException("유저 정보가 없습니다. id = " + id));
-
-//        user.update(
-//                request.getUserName(),
-//                request.getUserProfileImage(),
-//                request.getUserGreetings());
 
         User updateUser = User.builder()
                 .id(id)

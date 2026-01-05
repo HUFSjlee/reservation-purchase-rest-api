@@ -1,6 +1,5 @@
 package com.reservationpurchase.reservationpurchase.module.follow.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.reservationpurchase.reservationpurchase.common.base.BaseEntity;
 import com.reservationpurchase.reservationpurchase.module.user.domain.entity.User;
 import jakarta.persistence.*;
