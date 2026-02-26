@@ -91,10 +91,13 @@ public class UserDTO {
     @NoArgsConstructor
     public static class UpdateRequest {
         private Long id;
+        @NotBlank(message = "이름은 필수입니다.")
         @JsonProperty(value = "user_name")
         private String userName;
+        @NotBlank(message = "프로필 이미지는 필수입니다.")
         @JsonProperty(value = "user_profile_image")
         private String userProfileImage;
+        @NotBlank(message = "인사말은 필수입니다.")
         @JsonProperty(value = "user_greetings")
         private String userGreetings;
     }
@@ -118,6 +121,9 @@ public class UserDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class UpdatePasswordRequest {
+        @NotBlank(message = "비밀번호는 필수입니다.")
+        @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,30}$",
+                message = "비밀번호는 8~30자이며 영문, 숫자, 특수문자를 포함해야 합니다.")
         @JsonProperty(value = "user_password")
         private String userPassword;
     }

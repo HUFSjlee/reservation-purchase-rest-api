@@ -53,6 +53,10 @@ public class User extends BaseEntity implements UserDetails {
         this.userGreetings = userGreetings;
     }
 
+    public void updateProfileImage(String userProfileImage) {
+        this.userProfileImage = userProfileImage;
+    }
+
     public void encodePassword(PasswordEncoder passwordEncoder) {
         this.userPassword = passwordEncoder.encode(this.userPassword);
     }

@@ -63,7 +63,7 @@ public class UserService {
             throw new LoginException("비밀번호가 일치하지 않습니다.");
         }
 
-        return jwtTokenProvider.createToken(user.getUserEmail(), user.getId(), user.getUsername());
+        return jwtTokenProvider.createToken(user.getUserEmail(), user.getId(), user.getUserName());
     }
 
     @Transactional
@@ -81,16 +81,8 @@ public class UserService {
         User user = userRepository.findByUserEmail(email)
                 .orElseThrow(() -> new LoginException("이메일로 사용자를 찾을 수 없습니다: " + email));
 
-        User updatedUser = User.builder()
-                .id(user.getId())
-                .userName(user.getUsername())
-                .userEmail(user.getUserEmail())
-                .userPassword(user.getUserPassword())
-                .userProfileImage(imageUrl)
-                .userGreetings(user.getUserGreetings())
-                .build();
-
-        userRepository.save(updatedUser);
+        user.updateProfileImage(imageUrl);
+        userRepository.save(user);
     }
 
     @Transactional
