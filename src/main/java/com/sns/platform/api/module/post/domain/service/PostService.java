@@ -42,7 +42,7 @@ public class PostService {
 
         var savedPost = postRepository.save(post);
         String message = user.getUserName() + "님이 게시글을 작성했습니다.";
-        newsfeedService.publishToFollowers(user.getId(), message, NewsfeedType.POST);
+        newsfeedService.publishActivity(user.getId(), message, NewsfeedType.POST);
 
         return PostDTO.CreateResponse.builder()
                 .userId(savedPost.getPostId())

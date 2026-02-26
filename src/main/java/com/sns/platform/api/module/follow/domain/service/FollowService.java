@@ -50,7 +50,10 @@ FollowService {
         followEntity = followRepository.save(followEntity);
 
         String message = follower.getUserName() + "님이 " + following.getUserName() + "님을 팔로우했습니다.";
-        newsfeedService.publishToFollowers(follower.getId(), message, NewsfeedType.FOLLOW);
+        // 팔로우한 사용자 본인 + 팔로워들에게 활동 노출
+        newsfeedService.publishActivity(follower.getId(), message, NewsfeedType.FOLLOW);
+        // 팔로우 당한 사용자에게도 알림 노출
+        newsfeedService.createForUser(following.getId(), follower.getId(), message, NewsfeedType.FOLLOW);
 
         return FollowDTO.CreateResponse.builder()
                 .id(followEntity.getId())
@@ -59,5 +62,4 @@ FollowService {
                 .build();
     }
 }
-
 

@@ -54,7 +54,9 @@ public class LikeService {
             User postOwner = userRepository.findById(post.getUserId())
                     .orElseThrow(() -> new NotFoundUserException("게시글 작성자를 찾을 수 없습니다."));
             String message = user.getUserName() + "님이 " + postOwner.getUserName() + "님의 글을 좋아합니다.";
-            newsfeedService.publishToFollowers(user.getId(), message, NewsfeedType.POST_LIKE);
+            newsfeedService.publishActivity(user.getId(), message, NewsfeedType.POST_LIKE);
+            // 게시글 작성자에게도 알림 노출
+            newsfeedService.createForUser(postOwner.getId(), user.getId(), message, NewsfeedType.POST_LIKE);
         }
 
         return response;
@@ -88,7 +90,9 @@ public class LikeService {
             User commentOwner = comment.getUser();
             if (commentOwner != null) {
                 String message = user.getUserName() + "님이 " + commentOwner.getUserName() + "님의 댓글을 좋아합니다.";
-                newsfeedService.publishToFollowers(user.getId(), message, NewsfeedType.COMMENT_LIKE);
+                newsfeedService.publishActivity(user.getId(), message, NewsfeedType.COMMENT_LIKE);
+                // 댓글 작성자에게도 알림 노출
+                newsfeedService.createForUser(commentOwner.getId(), user.getId(), message, NewsfeedType.COMMENT_LIKE);
             }
         }
 

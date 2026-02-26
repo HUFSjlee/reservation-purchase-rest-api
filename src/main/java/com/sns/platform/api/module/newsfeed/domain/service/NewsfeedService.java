@@ -33,7 +33,11 @@ public class NewsfeedService {
     }
 
     @Transactional
-    public void publishToFollowers(Long actorUserId, String message, NewsfeedType type) {
+    public void publishActivity(Long actorUserId, String message, NewsfeedType type) {
+        // 작성자 본인에게도 활동이 보이도록 저장
+        createForUser(actorUserId, actorUserId, message, type);
+
+        // 작성자의 팔로워들에게 활동 전파
         List<Long> followerIds = followRepository.findFollowerIdsByFollowingId(actorUserId);
         for (Long followerId : followerIds) {
             createForUser(followerId, actorUserId, message, type);

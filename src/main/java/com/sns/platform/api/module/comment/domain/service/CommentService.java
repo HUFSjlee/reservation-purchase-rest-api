@@ -39,7 +39,9 @@ public class CommentService {
                 .orElseThrow(() -> new IllegalArgumentException("게시글 작성자를 찾을 수 없습니다."));
 
         String message = commenter.getUserName() + "님이 " + postOwner.getUserName() + "님의 글에 댓글을 남겼습니다.";
-        newsfeedService.publishToFollowers(commenter.getId(), message, NewsfeedType.COMMENT);
+        newsfeedService.publishActivity(commenter.getId(), message, NewsfeedType.COMMENT);
+        // 게시글 작성자에게도 알림 노출
+        newsfeedService.createForUser(postOwner.getId(), commenter.getId(), message, NewsfeedType.COMMENT);
 
         return new CommentResponseDTO(savedComment);
     }
