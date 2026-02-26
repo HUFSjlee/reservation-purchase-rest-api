@@ -62,6 +62,12 @@ public class UserController {
         return BaseResponse.success(userService.login(request));
     }
 
+    @PostMapping("/logout")
+    public BaseResponse<String> logout(@RequestHeader(value = "Authorization", required = false) String authorization) {
+        userService.logout(authorization);
+        return BaseResponse.success("로그아웃되었습니다.");
+    }
+
     @PutMapping("/set-profile-image")
     public ResponseEntity<String> setProfileImage(@RequestParam("file") MultipartFile file, @RequestParam("email") String email) throws IOException, FirebaseAuthException {
         String imageUrl = userService.uploadAndSaveProfileImage(file, "someName", createRequestWithProfileImage(email));

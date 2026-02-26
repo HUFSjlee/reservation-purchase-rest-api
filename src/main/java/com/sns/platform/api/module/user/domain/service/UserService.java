@@ -115,6 +115,29 @@ public class UserService {
         return userMapper.toUpdatePasswordResponse(user);
     }
 
+    @Transactional
+    public void logout(String authorizationHeader) {
+        String token = extractToken(authorizationHeader);
+        if (token == null) {
+            throw new LoginException("토큰이 없습니다.");
+        }
+
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new LoginException("유효하지 않은 토큰입니다.");
+        }
+        // Stateless JWT이므로 서버 측 세션 처리는 없음. 클라이언트에서 토큰을 폐기하면 됩니다.
+    }
+
+    private String extractToken(String authorizationHeader) {
+        if (authorizationHeader == null) {
+            return null;
+        }
+        if (authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        }
+        return null;
+    }
+
 }
 
 
