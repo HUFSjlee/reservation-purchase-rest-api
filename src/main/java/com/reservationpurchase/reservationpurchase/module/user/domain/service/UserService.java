@@ -35,10 +35,11 @@ public class UserService {
         var user = userMapper.toEntity(request);
 
         if (userRepository.findByUserEmail(user.getUserEmail()).isPresent()){
-            throw new Exception("이미 가입하신 이메일입니다.");
+            throw new Exception("?��? 가?�한 ?�메?�입?�다.");
         }
 
-        user.encodePassword(passwordEncoder);
+        // ?�기?�는 encodePassword ?�출 ?�거
+        // user.updatePassword(request.getUserPassword(), passwordEncoder);
 
         var savedMember = userRepository.save(user);
 
@@ -48,29 +49,29 @@ public class UserService {
     }
 
     public UserDTO.FindResponse findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("멤버가 존재하지 않습니다. id = " + id));
+        User user = userRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("멤버가 존재?��? ?�습?�다. id = " + id));
         return userMapper.toFindResponse(user);
     }
 
     @Transactional
     public String login(UserDTO.CreateRequest request) {
-        //멤버 이메일 체크
+        //멤버 ?�메??체크
         User user = userRepository.findByUserEmail(request.getUserEmail())
-                .orElseThrow(() -> new LoginException("멤버를 조회할 수 없습니다."));
+                .orElseThrow(() -> new LoginException("멤버�?조회?????�습?�다."));
 
-        //멤버 비밀번호 체크
-        if (passwordEncoder.matches(request.getCheckedPassword(), request.getUserPassword())) {
-            throw new LoginException("비밀번호가 일치하지 않습니다.");
+        //멤버 비�?번호 체크
+        if (!passwordEncoder.matches(request.getUserPassword(), user.getUserPassword())) {
+            throw new LoginException("비�?번호가 ?�치?��? ?�습?�다.");
         }
 
-        return "로그인 성공";
+        return "로그???�공";
     }
 
     @Transactional
     public String uploadAndSaveProfileImage(MultipartFile file, String nameFile, UserDTO.CreateRequest request) throws IOException, FirebaseAuthException {
         String imageUrl = firebaseService.uploadFiles(file, nameFile);
 
-        // 이미지 URL을 Member 엔티티에 저장
+        // ?��?지 URL??Member ?�티?�에 ?�??
         updateProfileImage(request.getUserEmail(), imageUrl);
 
         return imageUrl;
@@ -86,7 +87,7 @@ public class UserService {
                 .userName(user.getUsername())
                 .userEmail(user.getUserEmail())
                 .userPassword(user.getUserPassword())
-                .userProfileImage(imageUrl)  // 업데이트된 이미지 URL 설정
+                .userProfileImage(imageUrl)  // ?�데?�트???��?지 URL ?�정
                 .userGreetings(user.getUserGreetings())
                 .build();
 
@@ -95,26 +96,24 @@ public class UserService {
 
     @Transactional
     public UserDTO.UpdateResponse update(Long id, UserDTO.UpdateRequest request) {
-        User user = userRepository.findById(id).orElseThrow(()-> new UsernameNotFoundException("유저 정보가 없습니다. id = " + id));
+        User user = userRepository.findById(id).orElseThrow(()-> new UsernameNotFoundException("?��? ?�보가 ?�습?�다. id = " + id));
 
-        User updateUser = User.builder()
-                .id(id)
-                .userName(request.getUserName())
-                .userProfileImage(request.getUserProfileImage())
-                .userGreetings(request.getUserGreetings())
-                .build();
-        return userMapper.toUpdateResponse(updateUser);
+        user.update(request.getUserName(), request.getUserProfileImage(), request.getUserGreetings());
+        userRepository.save(user);
+        return userMapper.toUpdateResponse(user);
     }
 
     @Transactional
     public UserDTO.UpdatePasswordResponse updatePassword(Long id, UserDTO.UpdatePasswordRequest request) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("유저 정보가 없습니다. id " + id));
+        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("?��? ?�보가 ?�습?�다. id " + id));
 
-        User userUpdatedPassword = User.builder()
-                .userPassword(request.getUserPassword())
-                .build();
-
-        return userMapper.toUpdatePasswordResponse(userUpdatedPassword);
+        user.updatePassword(request.getUserPassword(), passwordEncoder);
+        userRepository.save(user);
+        return userMapper.toUpdatePasswordResponse(user);
     }
 
 }
+
+
+
+

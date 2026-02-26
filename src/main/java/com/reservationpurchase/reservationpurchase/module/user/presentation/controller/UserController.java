@@ -6,6 +6,7 @@ import com.reservationpurchase.reservationpurchase.config.jwt.JwtTokenProvider;
 import com.reservationpurchase.reservationpurchase.module.user.domain.service.EmailService;
 import com.reservationpurchase.reservationpurchase.module.user.domain.service.FirebaseService;
 import com.reservationpurchase.reservationpurchase.module.user.domain.service.UserService;
+import com.reservationpurchase.reservationpurchase.module.user.presentation.dto.EmailAuthDTO;
 import com.reservationpurchase.reservationpurchase.module.user.presentation.dto.SignInDto;
 import com.reservationpurchase.reservationpurchase.module.user.presentation.dto.UserDTO;
 import jakarta.mail.MessagingException;
@@ -34,13 +35,25 @@ public class UserController {
 
     @ResponseBody
     @PostMapping("/sign-up/emailauth")
-    public BaseResponse<String> EmailCheck(@RequestParam String emailRequest) throws MessagingException, UnsupportedEncodingException {
-        var authCode = emailService.sendEmail(emailRequest);
-        return BaseResponse.success(authCode);
+    public BaseResponse<String> emailCheck(@RequestParam String emailRequest)
+            throws MessagingException, UnsupportedEncodingException {
+
+        // 이메일 인증 코드 발송
+        emailService.sendEmail(emailRequest);
+        return BaseResponse.success("인증 코드가 발송되었습니다.");
+    }
+
+    @PostMapping("/sign-up/emailauth/verify")
+    public BaseResponse<String> verifyEmail(@RequestBody EmailAuthDTO.VerifyRequest request) {
+        // 이메일 인증 코드 검증
+        emailService.verifyCode(request.getEmail(), request.getCode());
+        return BaseResponse.success("이메일 인증이 완료되었습니다.");
     }
 
     @PostMapping("/signup")
     public ResponseEntity join(@Valid @RequestBody UserDTO.CreateRequest request) throws Exception {
+        // 회원가입 전에 이메일 인증 여부 확인
+        emailService.validateVerifiedEmail(request.getUserEmail());
         var response = userService.signUp(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.success(response));
     }

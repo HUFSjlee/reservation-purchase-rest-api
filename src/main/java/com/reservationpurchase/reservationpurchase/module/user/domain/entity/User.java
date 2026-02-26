@@ -57,9 +57,13 @@ public class User extends BaseEntity implements UserDetails {
         this.userPassword = passwordEncoder.encode(this.userPassword);
     }
 
+    public void updatePassword(String rawPassword, PasswordEncoder passwordEncoder) {
+        this.userPassword = passwordEncoder.encode(rawPassword);
+    }
+
     @Override
     public String getPassword() {
-        return null;
+        return this.userPassword;
     }
 
     @Override
