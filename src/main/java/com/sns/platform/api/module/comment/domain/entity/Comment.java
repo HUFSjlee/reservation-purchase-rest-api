@@ -3,6 +3,7 @@
 import com.sns.platform.api.module.comment.presentation.dto.CommentPutRequestDTO;
 import com.sns.platform.api.module.like.domain.entity.Like;
 import com.sns.platform.api.module.post.domain.entity.Post;
+import com.sns.platform.api.module.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,10 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(updatable = false, nullable = true)

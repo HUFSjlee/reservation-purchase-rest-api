@@ -23,12 +23,39 @@ public class NewsfeedDTO {
     @SuperBuilder
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class ReadRequest {
+        private Long userId;
+    }
+
+    @Getter
+    @SuperBuilder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class CreateResponse {
         private Long userId;
         private Long contentProvider;
         private String message;
         private NewsfeedType newsfeedType;
         private List<Long> userIds;
+    }
+
+    @Getter
+    @SuperBuilder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Item {
+        private Long userId;
+        private Long contentProvider;
+        private String message;
+        private NewsfeedType newsfeedType;
+    }
+
+    @Getter
+    @SuperBuilder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ReadResponse {
+        private List<Item> items;
     }
 }
 

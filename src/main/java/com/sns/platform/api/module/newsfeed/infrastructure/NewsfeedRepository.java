@@ -10,6 +10,8 @@ import java.util.List;
 public interface NewsfeedRepository extends JpaRepository<Newsfeed, Long> {
     @Query("SELECT n FROM Newsfeed n WHERE n.contentProvider = :userId OR n.userId IN :followList")
     List<Newsfeed> findByUserIdOrContentProvider(@Param("userId") Long userId, @Param("followList") List<Long> followList);
+
+    List<Newsfeed> findByUserIdOrderByCreatedAtDesc(Long userId);
 }
 
 

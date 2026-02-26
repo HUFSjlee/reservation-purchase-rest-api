@@ -24,5 +24,13 @@ public class LikeController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.success(response));
     }
+
+    @PostMapping("/{userId}/comment-like")
+    public ResponseEntity commentLikesReaction(@PathVariable Long userId, @RequestBody Map<String, Long> requestBody){
+        Long commentId = requestBody.get("commentId");
+        var response = likeService.commentLikesReaction(userId, commentId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.success(response));
+    }
 }
 

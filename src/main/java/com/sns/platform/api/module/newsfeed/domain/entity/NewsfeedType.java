@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public enum NewsfeedType {
-    COMMENT("?볤????묒꽦?덉뒿?덈떎."),
-    COMMENT_LIKE("?볤???醫뗭븘?⑸땲??"),
-    POST("寃뚯떆湲???묒꽦?섏??듬땲??"),
-    POST_LIKE("寃뚯떆湲??醫뗭븘?⑸땲??"),
-    FOLLOW("?붾줈?고븯?⑥뒿?덈떎.");
+    COMMENT("댓글을 작성했습니다."),
+    COMMENT_LIKE("댓글을 좋아합니다."),
+    POST("게시글을 작성했습니다."),
+    POST_LIKE("게시글을 좋아합니다."),
+    FOLLOW("팔로우했습니다.");
     String message;
     NewsfeedType(String message) {
         this.message = message;

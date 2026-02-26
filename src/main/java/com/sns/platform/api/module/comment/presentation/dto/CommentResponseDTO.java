@@ -14,6 +14,7 @@ import lombok.Setter;
 public class CommentResponseDTO {
     private Long id;
     private Long postId;
+    private Long userId;
     private String commentText;
 
 
@@ -21,5 +22,6 @@ public class CommentResponseDTO {
         this.id = comment.getId();
         this.commentText = comment.getCommentText();
         this.postId = comment.getPost().getPostId();
+        this.userId = comment.getUser() != null ? comment.getUser().getId() : null;
     }
 }

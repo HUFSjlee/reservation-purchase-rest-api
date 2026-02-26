@@ -3,6 +3,8 @@
 import com.sns.platform.api.module.follow.domain.entity.Follow;
 import com.sns.platform.api.module.follow.infrastructure.FollowRepository;
 import com.sns.platform.api.module.follow.presentation.dto.FollowDTO;
+import com.sns.platform.api.module.newsfeed.domain.entity.NewsfeedType;
+import com.sns.platform.api.module.newsfeed.domain.service.NewsfeedService;
 import com.sns.platform.api.module.user.domain.entity.User;
 import com.sns.platform.api.module.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ public class
 FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
+    private final NewsfeedService newsfeedService;
     @Transactional
     public FollowDTO.CreateResponse newCreateFollow(FollowDTO.CreateRequest request) {
         if (request.getFollower().equals(request.getFollowing())) {
@@ -46,6 +49,9 @@ FollowService {
 
         followEntity = followRepository.save(followEntity);
 
+        String message = follower.getUserName() + "님이 " + following.getUserName() + "님을 팔로우했습니다.";
+        newsfeedService.publishToFollowers(follower.getId(), message, NewsfeedType.FOLLOW);
+
         return FollowDTO.CreateResponse.builder()
                 .id(followEntity.getId())
                 .following(request.getFollowing())
@@ -53,6 +59,5 @@ FollowService {
                 .build();
     }
 }
-
 
 

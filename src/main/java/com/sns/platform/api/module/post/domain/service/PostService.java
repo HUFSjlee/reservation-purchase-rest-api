@@ -2,6 +2,8 @@
 
 import com.sns.platform.api.common.exception.NotFoundPostException;
 import com.sns.platform.api.common.exception.NotFoundUserException;
+import com.sns.platform.api.module.newsfeed.domain.entity.NewsfeedType;
+import com.sns.platform.api.module.newsfeed.domain.service.NewsfeedService;
 import com.sns.platform.api.module.post.domain.entity.Post;
 import com.sns.platform.api.module.post.infrastructure.PostRepository;
 import com.sns.platform.api.module.post.presentation.dto.PostDTO;
@@ -23,6 +25,7 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final NewsfeedService newsfeedService;
 
     @Transactional
     public PostDTO.CreateResponse write(PostDTO.CreateRequest request) {
@@ -38,6 +41,8 @@ public class PostService {
                 .build();
 
         var savedPost = postRepository.save(post);
+        String message = user.getUserName() + "님이 게시글을 작성했습니다.";
+        newsfeedService.publishToFollowers(user.getId(), message, NewsfeedType.POST);
 
         return PostDTO.CreateResponse.builder()
                 .userId(savedPost.getPostId())
@@ -46,7 +51,8 @@ public class PostService {
 
     @Transactional
     public PostDTO.UpdateResponse update(Long id, PostDTO.UpdateRequest request) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new NotFoundPostException("?대떦 ?ъ뒪?멸? 議댁옱?섏? ?딆뒿?덈떎. id= " + id));
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new NotFoundPostException("해당 게시글을 찾을 수 없습니다. id = " + id));
 
         post.update(post.getUserId(),post.getPostContent());
 
@@ -57,7 +63,8 @@ public class PostService {
 
     @Transactional
     public PostDTO.DeleteResponse deletePost(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new NotFoundPostException("?대떦 ?ъ뒪?멸? 議댁옱?섏? ?딆뒿?덈떎."));
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new NotFoundPostException("해당 게시글을 찾을 수 없습니다."));
 
         postRepository.delete(post);
 

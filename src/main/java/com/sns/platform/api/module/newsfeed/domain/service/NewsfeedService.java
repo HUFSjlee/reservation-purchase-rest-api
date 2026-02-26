@@ -1,11 +1,14 @@
 ﻿package com.sns.platform.api.module.newsfeed.domain.service;
 
 import com.sns.platform.api.module.newsfeed.domain.entity.Newsfeed;
+import com.sns.platform.api.module.newsfeed.domain.entity.NewsfeedType;
 import com.sns.platform.api.module.newsfeed.infrastructure.NewsfeedRepository;
 import com.sns.platform.api.module.newsfeed.presentation.dto.NewsfeedDTO;
+import com.sns.platform.api.module.follow.infrastructure.FollowRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
+import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,32 +17,41 @@ import java.util.stream.Collectors;
 public class NewsfeedService {
 
     private final NewsfeedRepository newsfeedRepository;
+    private final FollowRepository followRepository;
 
-    public List<String> read(NewsfeedDTO.CreateRequest request) {
-        List<Long> followList = new ArrayList<>();
-        followList.add(3L);
-        List<Newsfeed> all = newsfeedRepository.findByUserIdOrContentProvider(request.getUserId(),followList);
-        List<String> newsFeedMsg = all.stream().map(Newsfeed::getMessage).collect(Collectors.toList());
-        return newsFeedMsg;
+    public NewsfeedDTO.ReadResponse read(Long userId) {
+        List<Newsfeed> all = newsfeedRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        List<NewsfeedDTO.Item> items = all.stream()
+                .map(n -> NewsfeedDTO.Item.builder()
+                        .userId(n.getUserId())
+                        .contentProvider(n.getContentProvider())
+                        .message(n.getMessage())
+                        .newsfeedType(n.getNewsfeedType())
+                        .build())
+                .collect(Collectors.toList());
+        return NewsfeedDTO.ReadResponse.builder().items(items).build();
     }
 
-    public NewsfeedDTO.CreateResponse createnewsfeed(Long createUser, Long providerUser, String message) {
+    @Transactional
+    public void publishToFollowers(Long actorUserId, String message, NewsfeedType type) {
+        List<Long> followerIds = followRepository.findFollowerIdsByFollowingId(actorUserId);
+        for (Long followerId : followerIds) {
+            createForUser(followerId, actorUserId, message, type);
+        }
+    }
 
+    @Transactional
+    public void createForUser(Long userId, Long contentProvider, String message, NewsfeedType type) {
         Newsfeed newsfeed = Newsfeed.builder()
-                .userId(createUser)
-                .contentProvider(providerUser)
+                .userId(userId)
+                .contentProvider(contentProvider)
                 .message(message)
+                .newsfeedType(type)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
 
-        Newsfeed savedEntity = newsfeedRepository.save(newsfeed);
-
-        NewsfeedDTO.CreateResponse response = NewsfeedDTO.CreateResponse.builder()
-                .userId(savedEntity.getUserId())
-                .contentProvider(savedEntity.getContentProvider())
-                .message(savedEntity.getMessage())
-                .build();
-
-        return response;
+        newsfeedRepository.save(newsfeed);
     }
 }
 

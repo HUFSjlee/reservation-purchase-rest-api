@@ -7,9 +7,13 @@ import com.sns.platform.api.module.comment.infrasturcture.CommentRepository;
 import com.sns.platform.api.module.comment.presentation.dto.CommentPostRequestDTO;
 import com.sns.platform.api.module.comment.presentation.dto.CommentPutRequestDTO;
 import com.sns.platform.api.module.comment.presentation.dto.CommentResponseDTO;
+import com.sns.platform.api.module.newsfeed.domain.entity.NewsfeedType;
+import com.sns.platform.api.module.newsfeed.domain.service.NewsfeedService;
 import com.sns.platform.api.module.post.domain.entity.Post;
 import com.sns.platform.api.module.post.domain.service.PostService;
 import com.sns.platform.api.module.post.infrastructure.PostRepository;
+import com.sns.platform.api.module.user.domain.entity.User;
+import com.sns.platform.api.module.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +27,19 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostService postService;
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
+    private final NewsfeedService newsfeedService;
 
     public CommentResponseDTO saveComment(CommentPostRequestDTO dto) {
-        Comment savedComment = commentRepository.save(dto.toEntity(postRepository, commentRepository));
+        Comment savedComment = commentRepository.save(dto.toEntity(postRepository, commentRepository, userRepository));
+
+        Post post = savedComment.getPost();
+        User commenter = savedComment.getUser();
+        User postOwner = userRepository.findById(post.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("게시글 작성자를 찾을 수 없습니다."));
+
+        String message = commenter.getUserName() + "님이 " + postOwner.getUserName() + "님의 글에 댓글을 남겼습니다.";
+        newsfeedService.publishToFollowers(commenter.getId(), message, NewsfeedType.COMMENT);
 
         return new CommentResponseDTO(savedComment);
     }
