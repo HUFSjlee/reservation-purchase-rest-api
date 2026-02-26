@@ -1,0 +1,134 @@
+﻿package com.sns.platform.api.module.user.presentation.dto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sns.platform.api.module.follow.domain.entity.Follow;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.util.List;
+
+public class UserDTO {
+
+    @Getter
+    @SuperBuilder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class BaseResponse {
+        private Long id;
+
+        @JsonProperty(value = "user_name")
+        private String userName;
+
+        @JsonProperty(value = "user_email")
+        private String userEmail;
+
+        @NotBlank(message = "鍮꾨?踰덊샇瑜??낅젰?댁＜?몄슂")
+        @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,30}$",
+                message = "鍮꾨?踰덊샇??8~30 ?먮━?대㈃??1媛??댁긽???뚰뙆踰? ?レ옄, ?뱀닔臾몄옄瑜??ы븿?댁빞?⑸땲??")
+        @JsonProperty(value = "user_password")
+        private String userPassword;
+
+        @JsonProperty(value = "user_profile_image")
+        private String userProfileImage;
+
+        @JsonProperty(value = "user_greetings")
+        private String userGreetings;
+
+        @OneToMany(mappedBy = "from_user", fetch = FetchType.LAZY)
+        private List<Follow> followings;
+
+        @OneToMany(mappedBy = "to_user", fetch = FetchType.LAZY)
+        private List<Follow> followers;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class CreateRequest {
+        private Long id;
+        @NotBlank(message = "이름은 필수입니다.")
+        @JsonProperty(value = "user_name")
+        private String userName;
+        @NotBlank(message = "이메일은 필수입니다.")
+        @JsonProperty(value = "user_email")
+        private String userEmail;
+        @NotBlank(message = "비밀번호는 필수입니다.")
+        @JsonProperty(value = "user_password")
+        private String userPassword;
+        @NotBlank(message = "인사말은 필수입니다.")
+        @JsonProperty(value = "user_greetings")
+        private String userGreetings;
+        @NotBlank(message = "프로필 이미지는 필수입니다.")
+        @JsonProperty(value = "user_profile_image")
+        private String userProfileImage;
+        private String checkedPassword;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class CreateResponse {
+        private Long id;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class FindResponse {
+        private Long id;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UpdateRequest {
+        private Long id;
+        @JsonProperty(value = "user_name")
+        private String userName;
+        @JsonProperty(value = "user_profile_image")
+        private String userProfileImage;
+        @JsonProperty(value = "user_greetings")
+        private String userGreetings;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UpdateResponse {
+        private Long id;
+        @JsonProperty(value = "user_name")
+        private String userName;
+        @JsonProperty(value = "user_profile_image")
+        private String userProfileImage;
+        @JsonProperty(value = "user_greetings")
+        private String userGreetings;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UpdatePasswordRequest {
+        @JsonProperty(value = "user_password")
+        private String userPassword;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UpdatePasswordResponse {
+        @JsonProperty(value = "user_password")
+        private String userPassword;
+    }
+}
+
