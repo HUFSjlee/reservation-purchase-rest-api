@@ -3,10 +3,10 @@
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST, code = HttpStatus.BAD_REQUEST, reason = "parameter is not valid")
+@ResponseStatus(value = HttpStatus.BAD_REQUEST, code = HttpStatus.BAD_REQUEST, reason = "요청 파라미터가 올바르지 않습니다.")
 public class BadParametersException extends RuntimeException {
     public BadParametersException() {
-        super("parameter is not valid");
+        super("요청 파라미터가 올바르지 않습니다.");
     }
 
     public BadParametersException(String message) {

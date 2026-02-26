@@ -22,10 +22,10 @@ public class FirebaseInitializerService {
                     .build();
             if(FirebaseApp.getApps().isEmpty()){
                 FirebaseApp.initializeApp(options);
-                System.out.println("Firebase application has been initialized");
+            System.out.println("Firebase 애플리케이션이 초기화되었습니다.");
             }
         } catch (IOException e){
-            System.out.println("Firebase application initialized Fail : "+e.getMessage());
+            System.out.println("Firebase 애플리케이션 초기화 실패: " + e.getMessage());
         }
     }
 }

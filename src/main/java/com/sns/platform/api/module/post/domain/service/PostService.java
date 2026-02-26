@@ -26,7 +26,8 @@ public class PostService {
 
     @Transactional
     public PostDTO.CreateResponse write(PostDTO.CreateRequest request) {
-        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new NotFoundUserException("Member not found"));
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new NotFoundUserException("사용자를 찾을 수 없습니다."));
         Post post = Post.builder()
                 .userId(request.getUserId())
                 .postContent(request.getContent())

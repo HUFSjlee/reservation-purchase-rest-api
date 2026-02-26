@@ -1,8 +1,9 @@
 ﻿package com.sns.platform.api.config.jwt;
 
-import com.sns.platform.api.module.user.presentation.dto.SignInDto;
 import com.sns.platform.api.module.user.presentation.dto.UserDTO;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,12 +12,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
-import java.util.*;
 import java.security.Key;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static io.jsonwebtoken.security.Keys.secretKeyFor;
 
 @Component
 public class JwtTokenProvider implements InitializingBean {
@@ -26,29 +30,30 @@ public class JwtTokenProvider implements InitializingBean {
 
     public JwtTokenProvider(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds
+            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds
     ){
         this.secret = secret;
-        this.tokenValidityInMilliseconds = tokenValidityInMilliseconds;
+        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000L;
     }
 
     @Override
     public void afterPropertiesSet() {
-        this.key = secretKeyFor(SignatureAlgorithm.HS512);
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createToken(SignInDto signInDto){
+    public String createToken(String userEmail, Long userId, String userName){
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userName",signInDto.getUserName());
-        claims.put("userEmail",signInDto.getUserEmail());
-        claims.put("tokenValid",true);
+        claims.put("userId", userId);
+        claims.put("userName", userName);
 
         return Jwts.builder()
                 .addClaims(claims)
-                .signWith(key)
+                .setSubject(userEmail)
+                .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
     }
@@ -61,7 +66,7 @@ public class JwtTokenProvider implements InitializingBean {
 
             return Jwts.builder()
                     .addClaims(claims)
-                    .signWith(key)
+                    .signWith(key, SignatureAlgorithm.HS512)
                     .setExpiration(validity)
                     .compact();
         } else {
@@ -77,7 +82,7 @@ public class JwtTokenProvider implements InitializingBean {
                     .parseClaimsJws(token)
                     .getBody();
             return UserDTO.FindResponse.builder()
-                    .id(Long.parseLong(claims.get("userSeq").toString()))
+                    .id(Long.parseLong(claims.get("userId").toString()))
                     .build();
         } else {
             return null;
@@ -89,8 +94,7 @@ public class JwtTokenProvider implements InitializingBean {
                 .setSigningKey(key)
                 .parseClaimsJws(token)
                 .getBody();
-        boolean valid = claims.get("tokenValid",Boolean.class);
-        return valid;
+        return claims.getExpiration().after(new Date());
     }
     public Authentication getAuthentication(String token){
         Claims claims = Jwts
@@ -101,14 +105,14 @@ public class JwtTokenProvider implements InitializingBean {
                 .getBody();
 
         Collection<? extends GrantedAuthority> authorities =
-                authorityOf(claims.get("userSeq", String.class));
+                authorityOf(String.valueOf(claims.get("userId")));
 
         User principal = new User(claims.getSubject(), "", authorities);
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
-    public List<GrantedAuthority> authorityOf(String userSeq) {
-        if (userSeq == null) return Collections.emptyList();
-        return Stream.of(new SimpleGrantedAuthority(userSeq)).collect(Collectors.toList());
+    public List<GrantedAuthority> authorityOf(String userId) {
+        if (userId == null) return Collections.emptyList();
+        return Stream.of(new SimpleGrantedAuthority(userId)).collect(Collectors.toList());
     }
     public boolean validateToken(String token){//留뚮즺 泥댄겕
         try{
@@ -116,10 +120,10 @@ public class JwtTokenProvider implements InitializingBean {
             return true;
         }
         catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            System.out.println("Invalid JWT Signature");
+            System.out.println("유효하지 않은 JWT 서명입니다.");
         }
-        catch (ExpiredJwtException e) { System.out.println("JWT expired"); }
-        catch (IllegalArgumentException e) { System.out.println("Illegal JWT");}
+        catch (ExpiredJwtException e) { System.out.println("JWT가 만료되었습니다."); }
+        catch (IllegalArgumentException e) { System.out.println("올바르지 않은 JWT입니다.");}
         return false;
     }
 }

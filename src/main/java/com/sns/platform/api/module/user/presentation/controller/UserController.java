@@ -2,17 +2,14 @@
 
 import com.google.firebase.auth.FirebaseAuthException;
 import com.sns.platform.api.common.response.BaseResponse;
-import com.sns.platform.api.config.jwt.JwtTokenProvider;
 import com.sns.platform.api.module.user.domain.service.EmailService;
-import com.sns.platform.api.module.user.domain.service.FirebaseService;
 import com.sns.platform.api.module.user.domain.service.UserService;
 import com.sns.platform.api.module.user.presentation.dto.EmailAuthDTO;
-import com.sns.platform.api.module.user.presentation.dto.SignInDto;
+import com.sns.platform.api.module.user.presentation.dto.EmailLoginRequestDto;
 import com.sns.platform.api.module.user.presentation.dto.UserDTO;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/users")
@@ -30,8 +26,6 @@ public class UserController {
     private final UserService userService;
     private final EmailService emailService;
 
-    private final FirebaseService firebaseService;
-    private final JwtTokenProvider jwtTokenProvider;
 
     @ResponseBody
     @PostMapping("/sign-up/emailauth")
@@ -64,9 +58,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody UserDTO.CreateRequest request) {
-
-        return ResponseEntity.ok(userService.login(request));
+    public BaseResponse<String> login(@Valid @RequestBody EmailLoginRequestDto request) {
+        return BaseResponse.success(userService.login(request));
     }
 
     @PutMapping("/set-profile-image")
@@ -78,18 +71,6 @@ public class UserController {
         return UserDTO.CreateRequest.builder()
                 .userEmail(email)
                 .build();
-    }
-
-    @PostMapping("/sign-in")
-    public String signIn(@RequestBody SignInDto signInDto) {
-        String userName = signInDto.getUserName();
-        String userEmail = signInDto.getUserEmail();
-
-        signInDto.setUserName(userName);
-        String jwtToken = jwtTokenProvider.createToken(signInDto);
-
-        log.info("request username = {}, password = {}", userName, userEmail);
-        return jwtToken;
     }
 
     /**
