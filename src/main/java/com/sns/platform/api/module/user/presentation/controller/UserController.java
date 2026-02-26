@@ -6,6 +6,7 @@ import com.sns.platform.api.module.user.domain.service.EmailService;
 import com.sns.platform.api.module.user.domain.service.UserService;
 import com.sns.platform.api.module.user.presentation.dto.EmailAuthDTO;
 import com.sns.platform.api.module.user.presentation.dto.EmailLoginRequestDto;
+import com.sns.platform.api.module.user.presentation.dto.TokenDTO;
 import com.sns.platform.api.module.user.presentation.dto.UserDTO;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -58,14 +59,25 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public BaseResponse<String> login(@Valid @RequestBody EmailLoginRequestDto request) {
+    public BaseResponse<TokenDTO.LoginResponse> login(@Valid @RequestBody EmailLoginRequestDto request) {
         return BaseResponse.success(userService.login(request));
     }
 
     @PostMapping("/logout")
-    public BaseResponse<String> logout(@RequestHeader(value = "Authorization", required = false) String authorization) {
-        userService.logout(authorization);
+    public BaseResponse<String> logout(@RequestBody TokenDTO.RefreshRequest request) {
+        userService.logout(request);
         return BaseResponse.success("로그아웃되었습니다.");
+    }
+
+    @PostMapping("/logout-all")
+    public BaseResponse<String> logoutAll(@RequestBody TokenDTO.LogoutAllRequest request) {
+        userService.logoutAllDevices(request);
+        return BaseResponse.success("모든 기기에서 로그아웃되었습니다.");
+    }
+
+    @PostMapping("/token/refresh")
+    public BaseResponse<TokenDTO.RefreshResponse> refreshToken(@RequestBody TokenDTO.RefreshRequest request) {
+        return BaseResponse.success(userService.refreshAccessToken(request));
     }
 
     @PutMapping("/set-profile-image")

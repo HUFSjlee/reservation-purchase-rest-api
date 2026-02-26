@@ -4,10 +4,13 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.sns.platform.api.common.exception.LoginException;
 import com.sns.platform.api.common.exception.UsernameNotFoundException;
 import com.sns.platform.api.config.jwt.JwtTokenProvider;
+import com.sns.platform.api.module.user.domain.entity.RefreshToken;
 import com.sns.platform.api.module.user.domain.entity.User;
 import com.sns.platform.api.module.user.domain.mapper.UserMapper;
+import com.sns.platform.api.module.user.infrastructure.RefreshTokenRepository;
 import com.sns.platform.api.module.user.infrastructure.UserRepository;
 import com.sns.platform.api.module.user.presentation.dto.EmailLoginRequestDto;
+import com.sns.platform.api.module.user.presentation.dto.TokenDTO;
 import com.sns.platform.api.module.user.presentation.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.time.LocalDateTime;
+import java.util.Base64;
 
 @Service
 @Slf4j
@@ -26,6 +33,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final FirebaseService firebaseService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -55,7 +63,7 @@ public class UserService {
     }
 
     @Transactional
-    public String login(EmailLoginRequestDto request) {
+    public TokenDTO.LoginResponse login(EmailLoginRequestDto request) {
         User user = userRepository.findByUserEmail(request.getEmail())
                 .orElseThrow(() -> new LoginException("사용자를 찾을 수 없습니다."));
 
@@ -63,7 +71,20 @@ public class UserService {
             throw new LoginException("비밀번호가 일치하지 않습니다.");
         }
 
-        return jwtTokenProvider.createToken(user.getUserEmail(), user.getId(), user.getUserName());
+        String accessToken = jwtTokenProvider.createAccessToken(user.getUserEmail(), user.getId(), user.getUserName());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserEmail(), user.getId());
+
+        RefreshToken savedToken = RefreshToken.builder()
+                .user(user)
+                .tokenHash(hashToken(refreshToken))
+                .expiresAt(LocalDateTime.now().plusDays(14))
+                .build();
+        refreshTokenRepository.save(savedToken);
+
+        return TokenDTO.LoginResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     @Transactional
@@ -104,30 +125,61 @@ public class UserService {
 
         user.updatePassword(request.getUserPassword(), passwordEncoder);
         userRepository.save(user);
+        // 비밀번호 변경 시 모든 기기 로그아웃
+        refreshTokenRepository.deleteByUser_Id(user.getId());
         return userMapper.toUpdatePasswordResponse(user);
     }
 
     @Transactional
-    public void logout(String authorizationHeader) {
-        String token = extractToken(authorizationHeader);
-        if (token == null) {
-            throw new LoginException("토큰이 없습니다.");
+    public void logout(TokenDTO.RefreshRequest request) {
+        if (request == null || request.getRefreshToken() == null) {
+            throw new LoginException("리프레시 토큰이 없습니다.");
         }
 
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new LoginException("유효하지 않은 토큰입니다.");
+        if (!jwtTokenProvider.validateToken(request.getRefreshToken())) {
+            throw new LoginException("유효하지 않은 리프레시 토큰입니다.");
         }
-        // Stateless JWT이므로 서버 측 세션 처리는 없음. 클라이언트에서 토큰을 폐기하면 됩니다.
+
+        refreshTokenRepository.deleteByTokenHash(hashToken(request.getRefreshToken()));
     }
 
-    private String extractToken(String authorizationHeader) {
-        if (authorizationHeader == null) {
-            return null;
+    @Transactional
+    public void logoutAllDevices(TokenDTO.LogoutAllRequest request) {
+        if (request == null || request.getUserId() == null) {
+            throw new LoginException("userId는 필수입니다.");
         }
-        if (authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7);
+        refreshTokenRepository.deleteByUser_Id(request.getUserId());
+    }
+
+    @Transactional(readOnly = true)
+    public TokenDTO.RefreshResponse refreshAccessToken(TokenDTO.RefreshRequest request) {
+        if (request == null || request.getRefreshToken() == null) {
+            throw new LoginException("리프레시 토큰이 없습니다.");
         }
-        return null;
+
+        if (!jwtTokenProvider.validateToken(request.getRefreshToken())) {
+            throw new LoginException("유효하지 않은 리프레시 토큰입니다.");
+        }
+
+        String tokenHash = hashToken(request.getRefreshToken());
+        RefreshToken saved = refreshTokenRepository.findByTokenHash(tokenHash)
+                .orElseThrow(() -> new LoginException("만료되었거나 로그아웃된 토큰입니다."));
+
+        User user = saved.getUser();
+        String accessToken = jwtTokenProvider.createAccessToken(user.getUserEmail(), user.getId(), user.getUserName());
+        return TokenDTO.RefreshResponse.builder()
+                .accessToken(accessToken)
+                .build();
+    }
+
+    private String hashToken(String token) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashed = digest.digest(token.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(hashed);
+        } catch (Exception e) {
+            throw new IllegalStateException("토큰 해시 생성에 실패했습니다.");
+        }
     }
 
 }

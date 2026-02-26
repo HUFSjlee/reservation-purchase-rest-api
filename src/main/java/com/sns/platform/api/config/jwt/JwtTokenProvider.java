@@ -25,15 +25,18 @@ import java.util.stream.Stream;
 @Component
 public class JwtTokenProvider implements InitializingBean {
     private final String secret;
-    private final long tokenValidityInMilliseconds;
+    private final long accessTokenValidityInMilliseconds;
+    private final long refreshTokenValidityInMilliseconds;
     private Key key;
 
     public JwtTokenProvider(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds
+            @Value("${jwt.access-token-validity-in-seconds}") long accessTokenValidityInSeconds,
+            @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityInSeconds
     ){
         this.secret = secret;
-        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000L;
+        this.accessTokenValidityInMilliseconds = accessTokenValidityInSeconds * 1000L;
+        this.refreshTokenValidityInMilliseconds = refreshTokenValidityInSeconds * 1000L;
     }
 
     @Override
@@ -42,13 +45,29 @@ public class JwtTokenProvider implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createToken(String userEmail, Long userId, String userName){
+    public String createAccessToken(String userEmail, Long userId, String userName){
         long now = (new Date()).getTime();
-        Date validity = new Date(now + this.tokenValidityInMilliseconds);
+        Date validity = new Date(now + this.accessTokenValidityInMilliseconds);
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("userName", userName);
+
+        return Jwts.builder()
+                .addClaims(claims)
+                .setSubject(userEmail)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(validity)
+                .compact();
+    }
+
+    public String createRefreshToken(String userEmail, Long userId){
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + this.refreshTokenValidityInMilliseconds);
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
+        claims.put("type", "refresh");
 
         return Jwts.builder()
                 .addClaims(claims)

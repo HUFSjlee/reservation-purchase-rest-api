@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 // ?대떦 API????댁꽌??紐⑤뱺 ?붿껌???덇?
-                .requestMatchers("/users").permitAll()
+                .requestMatchers("/users/**").permitAll()
                 // USER 沅뚰븳???덉뼱???붿껌?????덉쓬
                 //.requestMatchers("/members/test").hasRole("USER")
                 // ??諛뽰뿉 紐⑤뱺 ?붿껌????댁꽌 ?몄쬆???꾩슂濡??쒕떎???ㅼ젙

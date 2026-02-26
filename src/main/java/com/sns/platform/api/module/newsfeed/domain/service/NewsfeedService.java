@@ -19,8 +19,8 @@ public class NewsfeedService {
     private final NewsfeedRepository newsfeedRepository;
     private final FollowRepository followRepository;
 
-    public NewsfeedDTO.ReadResponse read(Long userId) {
-        List<Newsfeed> all = newsfeedRepository.findByUserIdOrderByCreatedAtDesc(userId);
+    public NewsfeedDTO.ReadResponse read(Long userId, NewsfeedType type) {
+        List<Newsfeed> all = newsfeedRepository.findByUserIdAndType(userId, type);
         List<NewsfeedDTO.Item> items = all.stream()
                 .map(n -> NewsfeedDTO.Item.builder()
                         .userId(n.getUserId())
