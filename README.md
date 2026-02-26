@@ -1,45 +1,73 @@
-## 사용 기술
-- **Back-End**: Java 17, Spring Boot 3.2.2, Spring Security (JWT)
-- **ORM**: Spring Data JPA
-- **Database**: MySQL 8.0, Redis
-- **Infra**: Docker
-- **REST API 문서화**: Swagger
-- **Tools**: IntelliJ IDEA, Git
+## 프로젝트 개요
+SNS 백엔드 API 서버입니다. 사용자 인증, 포스트/댓글/좋아요, 팔로우 및 뉴스피드를 제공합니다.
 
 ---
 
-## 이슈 및 해결
-
-### 이슈 1) 무단 회원가입 방지 및 사용자 신원 확인 필요
-**문제**  
-회원가입 시 타인에 의한 무단 가입을 방지하고, 사용자 이메일의 유효성을 확인해야 했습니다.
-
-**해결 방안**  
-이메일 인증 기반 회원가입을 도입했습니다.
-
-**해결 과정**  
-JavaMail API를 사용해 인증 메일을 발송하고, 인증 코드 생성/검증 로직을 구현하여 이메일 인증 완료 후 가입이 가능하도록 처리했습니다.
+## 프로젝트 핵심 목표
+- 이메일 인증 기반 회원가입과 보안 강화
+- JWT 인증 + Refresh Token을 통한 안전한 세션 관리
+- 팔로우 기반 뉴스피드 제공
 
 ---
 
-### 이슈 2) 비밀번호 평문 저장으로 인한 보안 위험
-**문제**  
-비밀번호를 암호화하지 않고 DB에 저장할 경우 보안 사고로 이어질 수 있음을 인지했습니다.
-
-**해결 방안**  
-비밀번호를 암호화하여 저장하도록 개선했습니다.
-
-**해결 과정**  
-Spring Security의 `PasswordEncoder`를 적용해 비밀번호를 안전하게 해시 처리하여 저장했습니다.
+## 서비스 구성
+- 사용자: 회원가입/로그인/로그아웃/프로필·비밀번호 수정
+- 포스트: 작성/수정/삭제/조회
+- 댓글: 작성/수정/조회
+- 좋아요: 포스트/댓글 좋아요
+- 팔로우: 팔로우 생성 및 뉴스피드 반영
+- 뉴스피드: 활동 타입별 필터링, 최신순 조회
 
 ---
 
-### 이슈 3) 로그인 상태 유지 방식 결정 필요
-**문제**  
-로그인 이후 사용자 상태를 서버가 세션으로 계속 저장해야 하는지 고민이 필요했습니다.
+## 기술 스택
+- Back-End: Java 17, Spring Boot 3.x, Spring Security
+- 인증: JWT (Access/Refresh)
+- ORM: Spring Data JPA
+- Database: MySQL
+- Infra: Docker
+- 기타: Firebase Storage(프로필 이미지), JavaMail(이메일 인증)
 
-**해결 방안**  
-상태 유지를 위해 토큰 기반 인증(JWT)을 도입했습니다.
+---
 
-**해결 과정**  
-로그인 성공 시 JWT를 발급하고, 토큰에 사용자 식별에 필요한 정보(예: 이름, 이메일)를 담아 이후 요청에서 인증/인가에 활용하도록 구성했습니다.
+## 아키텍처
+- Presentation: Controller + DTO
+- Domain: Entity + Service
+- Infrastructure: Repository
+- 인증 흐름: Access Token 검증 + Refresh Token DB 저장
+
+---
+
+## ERD (요약)
+```mermaid
+erDiagram
+  USER ||--o{ POST : writes
+  USER ||--o{ COMMENT : writes
+  USER ||--o{ LIKE : makes
+  USER ||--o{ FOLLOW : follower
+  USER ||--o{ FOLLOW : following
+  POST ||--o{ COMMENT : has
+  POST ||--o{ LIKE : liked_by
+  COMMENT ||--o{ LIKE : liked_by
+  USER ||--o{ REFRESH_TOKEN : owns
+  USER ||--o{ NEWSFEED : receives
+```
+
+핵심 엔티티: User, Post, Comment, Like, Follow, Newsfeed, RefreshToken, EmailAuth
+
+---
+
+## 프로젝트 구조
+```
+src/main/java/com/sns/platform/api
+├─ common
+├─ config
+├─ module
+│  ├─ comment
+│  ├─ follow
+│  ├─ like
+│  ├─ newsfeed
+│  ├─ post
+│  └─ user
+└─ SnsPlatformApiApplication.java
+```
