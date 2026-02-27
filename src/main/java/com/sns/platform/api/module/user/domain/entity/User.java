@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.user.domain.entity;
+package com.sns.platform.api.module.user.domain.entity;
 
 import com.sns.platform.api.common.base.BaseEntity;
 import com.sns.platform.api.module.follow.domain.entity.Follow;
@@ -78,6 +78,11 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     public String getUsername() {
         return this.userEmail;
+    }
+
+    // Lombok 미적용 환경에서도 명확히 제공
+    public String getUserName() {
+        return this.userName;
     }
 
     @Override

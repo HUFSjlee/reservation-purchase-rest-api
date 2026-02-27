@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.follow.domain.entity;
+package com.sns.platform.api.module.follow.domain.entity;
 
 import com.sns.platform.api.common.base.BaseEntity;
 import com.sns.platform.api.module.user.domain.entity.User;

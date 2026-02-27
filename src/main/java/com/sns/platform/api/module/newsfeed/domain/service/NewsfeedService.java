@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.newsfeed.domain.service;
+package com.sns.platform.api.module.newsfeed.domain.service;
 
 import com.sns.platform.api.module.newsfeed.domain.entity.Newsfeed;
 import com.sns.platform.api.module.newsfeed.domain.entity.NewsfeedType;

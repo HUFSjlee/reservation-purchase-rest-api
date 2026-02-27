@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.comment.presentation.controller;
+package com.sns.platform.api.module.comment.presentation.controller;
 
 import com.sns.platform.api.common.PageableValidator;
 import com.sns.platform.api.module.comment.domain.service.CommentService;

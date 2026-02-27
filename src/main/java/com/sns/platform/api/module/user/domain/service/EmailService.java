@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.user.domain.service;
+package com.sns.platform.api.module.user.domain.service;
 
 import com.sns.platform.api.module.post.domain.entity.EmailAuth;
 import com.sns.platform.api.module.user.infrastructure.EmailAuthRepository;

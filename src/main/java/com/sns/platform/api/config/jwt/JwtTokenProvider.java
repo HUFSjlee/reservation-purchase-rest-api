@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.config.jwt;
+package com.sns.platform.api.config.jwt;
 
 import com.sns.platform.api.module.user.presentation.dto.UserDTO;
 import io.jsonwebtoken.*;

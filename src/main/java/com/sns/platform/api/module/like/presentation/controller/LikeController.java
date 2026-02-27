@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.like.presentation.controller;
+package com.sns.platform.api.module.like.presentation.controller;
 
 import com.sns.platform.api.common.response.BaseResponse;
 import com.sns.platform.api.module.like.domain.service.LikeService;

@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.post.presentation.controller;
+package com.sns.platform.api.module.post.presentation.controller;
 
 import com.sns.platform.api.common.response.BaseResponse;
 import com.sns.platform.api.module.post.domain.entity.Post;

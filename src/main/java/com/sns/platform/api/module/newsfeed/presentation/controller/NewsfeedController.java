@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.newsfeed.presentation.controller;
+package com.sns.platform.api.module.newsfeed.presentation.controller;
 
 import com.sns.platform.api.common.response.BaseResponse;
 import com.sns.platform.api.module.newsfeed.domain.entity.NewsfeedType;

@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.post.domain.service;
+package com.sns.platform.api.module.post.domain.service;
 
 import com.sns.platform.api.common.exception.NotFoundPostException;
 import com.sns.platform.api.common.exception.NotFoundUserException;
@@ -41,7 +41,7 @@ public class PostService {
                 .build();
 
         var savedPost = postRepository.save(post);
-        String message = user.getUserName() + "님이 게시글을 작성했습니다.";
+        String message = user.getUsername() + "님이 게시글을 작성했습니다.";
         newsfeedService.publishActivity(user.getId(), message, NewsfeedType.POST);
 
         return PostDTO.CreateResponse.builder()

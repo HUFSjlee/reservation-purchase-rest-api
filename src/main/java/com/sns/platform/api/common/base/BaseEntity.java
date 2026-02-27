@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.common.base;
+package com.sns.platform.api.common.base;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

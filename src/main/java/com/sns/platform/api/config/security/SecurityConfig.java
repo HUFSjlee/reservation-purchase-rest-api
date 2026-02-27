@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.config.security;
+package com.sns.platform.api.config.security;
 
 import com.sns.platform.api.config.jwt.JwtAuthenticationFilter;
 import com.sns.platform.api.config.jwt.JwtTokenProvider;

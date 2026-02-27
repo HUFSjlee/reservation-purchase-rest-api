@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.common.response;
+package com.sns.platform.api.common.response;
 
 import lombok.Getter;
 

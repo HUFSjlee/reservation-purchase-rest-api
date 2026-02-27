@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.newsfeed.domain.entity;
+package com.sns.platform.api.module.newsfeed.domain.entity;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.post.domain.entity;
+package com.sns.platform.api.module.post.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import jakarta.persistence.*;

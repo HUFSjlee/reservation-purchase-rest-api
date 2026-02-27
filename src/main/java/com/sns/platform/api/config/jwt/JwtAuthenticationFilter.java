@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.config.jwt;
+package com.sns.platform.api.config.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

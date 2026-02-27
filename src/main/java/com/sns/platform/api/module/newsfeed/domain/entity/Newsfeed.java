@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.newsfeed.domain.entity;
+package com.sns.platform.api.module.newsfeed.domain.entity;
 
 import com.sns.platform.api.common.base.BaseEntity;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.user.presentation.dto;
+package com.sns.platform.api.module.user.presentation.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

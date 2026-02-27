@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.user.presentation.controller;
+package com.sns.platform.api.module.user.presentation.controller;
 
 import com.google.firebase.auth.FirebaseAuthException;
 import com.sns.platform.api.common.response.BaseResponse;

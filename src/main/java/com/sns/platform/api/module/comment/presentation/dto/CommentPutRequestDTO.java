@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.comment.presentation.dto;
+package com.sns.platform.api.module.comment.presentation.dto;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.common;
+package com.sns.platform.api.common;
 
 import com.sns.platform.api.common.exception.BadParametersException;
 import org.springframework.data.domain.Pageable;

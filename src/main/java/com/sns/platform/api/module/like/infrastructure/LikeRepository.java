@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.like.infrastructure;
+package com.sns.platform.api.module.like.infrastructure;
 
 import com.sns.platform.api.module.like.domain.entity.Like;
 import com.sns.platform.api.module.comment.domain.entity.Comment;

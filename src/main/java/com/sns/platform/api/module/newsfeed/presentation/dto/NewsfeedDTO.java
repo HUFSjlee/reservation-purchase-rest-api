@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.newsfeed.presentation.dto;
+package com.sns.platform.api.module.newsfeed.presentation.dto;
 
 import com.sns.platform.api.module.newsfeed.domain.entity.NewsfeedType;
 import lombok.AllArgsConstructor;

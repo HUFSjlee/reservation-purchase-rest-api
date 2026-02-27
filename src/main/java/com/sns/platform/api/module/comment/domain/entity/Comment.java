@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.comment.domain.entity;
+package com.sns.platform.api.module.comment.domain.entity;
 
 import com.sns.platform.api.module.comment.presentation.dto.CommentPutRequestDTO;
 import com.sns.platform.api.module.like.domain.entity.Like;

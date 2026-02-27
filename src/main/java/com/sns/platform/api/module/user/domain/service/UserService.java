@@ -42,10 +42,10 @@ public class UserService {
         var user = userMapper.toEntity(request);
 
         if (userRepository.findByUserEmail(user.getUserEmail()).isPresent()){
-            throw new Exception("이미 가입된 이메일입니다.");
+            throw new Exception("?대? 媛?낅맂 ?대찓?쇱엯?덈떎.");
         }
 
-        // UserMapper에서 비밀번호를 암호화합니다.
+        // UserMapper?먯꽌 鍮꾨?踰덊샇瑜??뷀샇?뷀빀?덈떎.
         // user.updatePassword(request.getUserPassword(), passwordEncoder);
 
         var savedMember = userRepository.save(user);
@@ -57,7 +57,7 @@ public class UserService {
 
     public UserDTO.FindResponse findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다. id = " + id)
+                () -> new IllegalArgumentException("?ъ슜?먮? 李얠쓣 ???놁뒿?덈떎. id = " + id)
         );
         return userMapper.toFindResponse(user);
     }
@@ -65,10 +65,10 @@ public class UserService {
     @Transactional
     public TokenDTO.LoginResponse login(EmailLoginRequestDto request) {
         User user = userRepository.findByUserEmail(request.getEmail())
-                .orElseThrow(() -> new LoginException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new LoginException("?ъ슜?먮? 李얠쓣 ???놁뒿?덈떎."));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getUserPassword())) {
-            throw new LoginException("비밀번호가 일치하지 않습니다.");
+            throw new LoginException("鍮꾨?踰덊샇媛 ?쇱튂?섏? ?딆뒿?덈떎.");
         }
 
         String accessToken = jwtTokenProvider.createAccessToken(user.getUserEmail(), user.getId(), user.getUserName());
@@ -91,8 +91,7 @@ public class UserService {
     public String uploadAndSaveProfileImage(MultipartFile file, String nameFile, UserDTO.CreateRequest request) throws IOException, FirebaseAuthException {
         String imageUrl = firebaseService.uploadFiles(file, nameFile);
 
-        // 이미지 URL을 사용자 프로필에 저장
-        updateProfileImage(request.getUserEmail(), imageUrl);
+        // ?대?吏 URL???ъ슜???꾨줈?꾩뿉 ???        updateProfileImage(request.getUserEmail(), imageUrl);
 
         return imageUrl;
     }
@@ -100,7 +99,7 @@ public class UserService {
     @Transactional
     public void updateProfileImage(String email, String imageUrl) {
         User user = userRepository.findByUserEmail(email)
-                .orElseThrow(() -> new LoginException("이메일로 사용자를 찾을 수 없습니다: " + email));
+                .orElseThrow(() -> new LoginException("?대찓?쇰줈 ?ъ슜?먮? 李얠쓣 ???놁뒿?덈떎: " + email));
 
         user.updateProfileImage(imageUrl);
         userRepository.save(user);
@@ -109,7 +108,7 @@ public class UserService {
     @Transactional
     public UserDTO.UpdateResponse update(Long id, UserDTO.UpdateRequest request) {
         User user = userRepository.findById(id).orElseThrow(
-                () -> new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다. id = " + id)
+                () -> new UsernameNotFoundException("?ъ슜???뺣낫瑜?李얠쓣 ???놁뒿?덈떎. id = " + id)
         );
 
         user.update(request.getUserName(), request.getUserProfileImage(), request.getUserGreetings());
@@ -120,12 +119,12 @@ public class UserService {
     @Transactional
     public UserDTO.UpdatePasswordResponse updatePassword(Long id, UserDTO.UpdatePasswordRequest request) {
         User user = userRepository.findById(id).orElseThrow(
-                () -> new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다. id = " + id)
+                () -> new UsernameNotFoundException("?ъ슜???뺣낫瑜?李얠쓣 ???놁뒿?덈떎. id = " + id)
         );
 
         user.updatePassword(request.getUserPassword(), passwordEncoder);
         userRepository.save(user);
-        // 비밀번호 변경 시 모든 기기 로그아웃
+        // 鍮꾨?踰덊샇 蹂寃???紐⑤뱺 湲곌린 濡쒓렇?꾩썐
         refreshTokenRepository.deleteByUser_Id(user.getId());
         return userMapper.toUpdatePasswordResponse(user);
     }
@@ -133,11 +132,11 @@ public class UserService {
     @Transactional
     public void logout(TokenDTO.RefreshRequest request) {
         if (request == null || request.getRefreshToken() == null) {
-            throw new LoginException("리프레시 토큰이 없습니다.");
+            throw new LoginException("由ы봽?덉떆 ?좏겙???놁뒿?덈떎.");
         }
 
         if (!jwtTokenProvider.validateToken(request.getRefreshToken())) {
-            throw new LoginException("유효하지 않은 리프레시 토큰입니다.");
+            throw new LoginException("?좏슚?섏? ?딆? 由ы봽?덉떆 ?좏겙?낅땲??");
         }
 
         refreshTokenRepository.deleteByTokenHash(hashToken(request.getRefreshToken()));
@@ -146,7 +145,7 @@ public class UserService {
     @Transactional
     public void logoutAllDevices(TokenDTO.LogoutAllRequest request) {
         if (request == null || request.getUserId() == null) {
-            throw new LoginException("userId는 필수입니다.");
+            throw new LoginException("userId???꾩닔?낅땲??");
         }
         refreshTokenRepository.deleteByUser_Id(request.getUserId());
     }
@@ -154,16 +153,16 @@ public class UserService {
     @Transactional(readOnly = true)
     public TokenDTO.RefreshResponse refreshAccessToken(TokenDTO.RefreshRequest request) {
         if (request == null || request.getRefreshToken() == null) {
-            throw new LoginException("리프레시 토큰이 없습니다.");
+            throw new LoginException("由ы봽?덉떆 ?좏겙???놁뒿?덈떎.");
         }
 
         if (!jwtTokenProvider.validateToken(request.getRefreshToken())) {
-            throw new LoginException("유효하지 않은 리프레시 토큰입니다.");
+            throw new LoginException("?좏슚?섏? ?딆? 由ы봽?덉떆 ?좏겙?낅땲??");
         }
 
         String tokenHash = hashToken(request.getRefreshToken());
         RefreshToken saved = refreshTokenRepository.findByTokenHash(tokenHash)
-                .orElseThrow(() -> new LoginException("만료되었거나 로그아웃된 토큰입니다."));
+                .orElseThrow(() -> new LoginException("留뚮즺?섏뿀嫄곕굹 濡쒓렇?꾩썐???좏겙?낅땲??"));
 
         User user = saved.getUser();
         String accessToken = jwtTokenProvider.createAccessToken(user.getUserEmail(), user.getId(), user.getUserName());
@@ -178,7 +177,7 @@ public class UserService {
             byte[] hashed = digest.digest(token.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(hashed);
         } catch (Exception e) {
-            throw new IllegalStateException("토큰 해시 생성에 실패했습니다.");
+            throw new IllegalStateException("?좏겙 ?댁떆 ?앹꽦???ㅽ뙣?덉뒿?덈떎.");
         }
     }
 

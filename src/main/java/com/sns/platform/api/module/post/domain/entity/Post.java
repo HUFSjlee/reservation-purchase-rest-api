@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.post.domain.entity;
+package com.sns.platform.api.module.post.domain.entity;
 
 import com.sns.platform.api.common.base.BaseEntity;
 import com.sns.platform.api.module.comment.domain.entity.Comment;

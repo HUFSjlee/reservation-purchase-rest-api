@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.user.domain.mapper;
+package com.sns.platform.api.module.user.domain.mapper;
 
 import com.sns.platform.api.module.user.domain.entity.User;
 import com.sns.platform.api.module.user.presentation.dto.UserDTO;

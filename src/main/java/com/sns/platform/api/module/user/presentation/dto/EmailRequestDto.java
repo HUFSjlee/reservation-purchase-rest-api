@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.user.presentation.dto;
+package com.sns.platform.api.module.user.presentation.dto;
 
 import com.sns.platform.api.module.user.domain.entity.User;
 import jakarta.validation.constraints.Email;

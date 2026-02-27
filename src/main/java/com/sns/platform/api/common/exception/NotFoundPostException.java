@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.common.exception;
+package com.sns.platform.api.common.exception;
 
 import com.sns.platform.api.common.response.ResponseCode;
 

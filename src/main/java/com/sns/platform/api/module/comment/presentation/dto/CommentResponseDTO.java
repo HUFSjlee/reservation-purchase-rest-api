@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.comment.presentation.dto;
+package com.sns.platform.api.module.comment.presentation.dto;
 
 import com.sns.platform.api.module.comment.domain.entity.Comment;
 import lombok.AllArgsConstructor;

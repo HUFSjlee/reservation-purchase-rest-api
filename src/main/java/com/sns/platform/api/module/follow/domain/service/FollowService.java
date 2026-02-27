@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.follow.domain.service;
+package com.sns.platform.api.module.follow.domain.service;
 
 import com.sns.platform.api.module.follow.domain.entity.Follow;
 import com.sns.platform.api.module.follow.infrastructure.FollowRepository;
@@ -49,7 +49,7 @@ FollowService {
 
         followEntity = followRepository.save(followEntity);
 
-        String message = follower.getUserName() + "님이 " + following.getUserName() + "님을 팔로우했습니다.";
+        String message = follower.getUsername() + "님이 " + following.getUsername() + "님을 팔로우했습니다.";
         // 팔로우한 사용자 본인 + 팔로워들에게 활동 노출
         newsfeedService.publishActivity(follower.getId(), message, NewsfeedType.FOLLOW);
         // 팔로우 당한 사용자에게도 알림 노출

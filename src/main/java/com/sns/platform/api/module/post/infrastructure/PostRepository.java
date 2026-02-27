@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.post.infrastructure;
+package com.sns.platform.api.module.post.infrastructure;
 
 import com.sns.platform.api.module.post.domain.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;

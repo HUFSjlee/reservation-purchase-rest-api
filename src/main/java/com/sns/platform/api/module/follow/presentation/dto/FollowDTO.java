@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.follow.presentation.dto;
+package com.sns.platform.api.module.follow.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sns.platform.api.module.user.domain.entity.User;

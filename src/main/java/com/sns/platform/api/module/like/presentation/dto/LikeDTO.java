@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.like.presentation.dto;
+package com.sns.platform.api.module.like.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

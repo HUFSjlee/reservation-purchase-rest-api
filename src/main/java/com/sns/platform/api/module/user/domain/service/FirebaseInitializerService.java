@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.user.domain.service;
+package com.sns.platform.api.module.user.domain.service;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;

@@ -1,4 +1,4 @@
-﻿package com.sns.platform.api.module.user.infrastructure;
+package com.sns.platform.api.module.user.infrastructure;
 
 import com.sns.platform.api.module.post.domain.entity.EmailAuth;
 import org.springframework.data.jpa.repository.JpaRepository;
