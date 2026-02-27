@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 @Getter
 public class BaseResponse<T> {
     /**
-     * ?덉긽 json ?곗씠???뺤떇
-     * {"code" : "abc", "msg" : "xx?섏뿀?듬땲??", "result" : {"name" = "dfd" , "quantity" : "3"}, "timestamp" : "21211241"}
+     * 예시 JSON 응답 포맷
+     * {"code":"200","msg":"성공","result":{"name":"dfd","quantity":"3"},"timestamp":"2026-01-01T00:00:00"}
      * */
     private String code;
     private String msg;

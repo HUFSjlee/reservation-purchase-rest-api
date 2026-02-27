@@ -15,7 +15,7 @@ public class UserMapper {
         return User.builder()
                 .userName(request.getUserName())
                 .userEmail(request.getUserEmail())
-                .userPassword(passwordEncoder.encode(request.getUserPassword())) // 鍮꾨?踰덊샇瑜??뷀샇?뷀븯???ㅼ젙
+                .userPassword(passwordEncoder.encode(request.getUserPassword())) // 비밀번호 암호화 저장
                 .userProfileImage(request.getUserProfileImage())
                 .userGreetings(request.getUserGreetings())
                 .createdAt(LocalDateTime.now())

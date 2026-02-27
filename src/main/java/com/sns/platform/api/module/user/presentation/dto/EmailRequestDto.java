@@ -13,13 +13,13 @@ import lombok.Data;
 @AllArgsConstructor
 public class EmailRequestDto {
 
-    @NotEmpty(message = "?대찓?쇱쓣 ?낅젰?댁＜?몄슂")
+    @NotEmpty(message = "이메일을 입력해주세요.")
     @Email
     private String email;
 
-    @NotEmpty(message = "鍮꾨?踰덊샇瑜??낅젰?댁＜?몄슂")
+    @NotEmpty(message = "비밀번호를 입력해주세요.")
     @Pattern(regexp = " ^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d~!@#$%^&*()+|=]{8,20}$",
-            message = "8???댁긽?대ŉ 理쒕? 20?먭퉴吏 ?덉슜. 諛섎뱶???レ옄, 臾몄옄 ?ы븿")
+            message = "비밀번호는 8~20자이며 영문과 숫자를 포함해야 합니다.")
     private String password;
 
     @Builder

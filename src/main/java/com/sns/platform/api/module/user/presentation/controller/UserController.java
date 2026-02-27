@@ -33,21 +33,21 @@ public class UserController {
     public BaseResponse<String> emailCheck(@RequestParam String emailRequest)
             throws MessagingException, UnsupportedEncodingException {
 
-        // ?대찓???몄쬆 肄붾뱶 諛쒖넚
+        // 이메일 인증 코드 발송
         emailService.sendEmail(emailRequest);
-        return BaseResponse.success("?몄쬆 肄붾뱶媛 諛쒖넚?섏뿀?듬땲??");
+        return BaseResponse.success("인증 코드가 발송되었습니다.");
     }
 
     @PostMapping("/sign-up/emailauth/verify")
     public BaseResponse<String> verifyEmail(@RequestBody EmailAuthDTO.VerifyRequest request) {
-        // ?대찓???몄쬆 肄붾뱶 寃利?
+        // 이메일 인증 코드 검증
         emailService.verifyCode(request.getEmail(), request.getCode());
-        return BaseResponse.success("?대찓???몄쬆???꾨즺?섏뿀?듬땲??");
+        return BaseResponse.success("이메일 인증이 완료되었습니다.");
     }
 
     @PostMapping("/signup")
     public ResponseEntity join(@Valid @RequestBody UserDTO.CreateRequest request) throws Exception {
-        // ?뚯썝媛???꾩뿉 ?대찓???몄쬆 ?щ? ?뺤씤
+        // 회원가입 전에 이메일 인증 여부 확인
         emailService.validateVerifiedEmail(request.getUserEmail());
         var response = userService.signUp(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.success(response));
@@ -92,16 +92,16 @@ public class UserController {
     }
 
     /**
-     * ?좎? ?대쫫, ?좎? ?꾨줈???대?吏, ?좎? ?뚭컻留??섏젙
-     * */
+     * 이름, 프로필 이미지, 인사말 수정
+     */
     @PutMapping("/update/{id}")
     public BaseResponse<UserDTO.UpdateResponse> update(@PathVariable Long id, @Validated @RequestBody UserDTO.UpdateRequest request) {
         return BaseResponse.success(userService.update(id, request));
     }
 
     /**
-     * ?좎? 鍮꾨?踰덊샇 ?섏젙
-     * */
+     * 비밀번호 수정
+     */
     @PutMapping("/{id}")
     public BaseResponse<UserDTO.UpdatePasswordResponse> updatePassword(@PathVariable Long id, @Validated @RequestBody UserDTO.UpdatePasswordRequest request) {
         return BaseResponse.success(userService.updatePassword(id,request));

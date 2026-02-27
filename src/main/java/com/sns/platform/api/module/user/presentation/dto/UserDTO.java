@@ -26,9 +26,9 @@ public class UserDTO {
         @JsonProperty(value = "user_email")
         private String userEmail;
 
-        @NotBlank(message = "鍮꾨?踰덊샇瑜??낅젰?댁＜?몄슂")
+        @NotBlank(message = "비밀번호를 입력해주세요.")
         @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,30}$",
-                message = "鍮꾨?踰덊샇??8~30 ?먮━?대㈃??1媛??댁긽???뚰뙆踰? ?レ옄, ?뱀닔臾몄옄瑜??ы븿?댁빞?⑸땲??")
+                message = "비밀번호는 8~30자이며 영문, 숫자, 특수문자를 포함해야 합니다.")
         @JsonProperty(value = "user_password")
         private String userPassword;
 

@@ -21,7 +21,7 @@ public class EmailService {
 
     private String authNum;
 
-    // ?몄쬆 肄붾뱶 ?앹꽦
+    // 인증 코드 생성
     public void createCode() {
         Random random = new Random();
         StringBuffer key = new StringBuffer();
@@ -44,12 +44,12 @@ public class EmailService {
         authNum = key.toString();
     }
 
-    // 硫붿씪 ?댁슜 援ъ꽦
+    // 메일 내용 구성
     public MimeMessage createEmailForm(String email) throws MessagingException, UnsupportedEncodingException {
         createCode();
         String setFrom = "testtest12@gmail.com";
         String toEmail = email;
-        String title = "?뚯썝 媛?낆쓣 ?꾪븳 ?몄쬆 肄붾뱶?낅땲??";
+        String title = "회원가입을 위한 인증 코드입니다.";
 
         MimeMessage message = emailSender.createMimeMessage();
         message.addRecipients(MimeMessage.RecipientType.TO, toEmail);
@@ -57,14 +57,14 @@ public class EmailService {
 
         String msgOfEmail = "";
         msgOfEmail += "<div style='margin:20px;'>";
-        msgOfEmail += "<h1> ?뚯썝 媛?낆쓣 ?꾪븳 肄붾뱶?낅땲?? </h1>";
+        msgOfEmail += "<h1> 회원가입을 위한 인증 코드입니다. </h1>";
         msgOfEmail += "<br>";
-        msgOfEmail += "<p>?꾨옒 肄붾뱶瑜??낅젰?댁＜?몄슂.<p>";
+        msgOfEmail += "<p>아래 코드를 입력해주세요.<p>";
         msgOfEmail += "<br>";
-        msgOfEmail += "<p>媛먯궗?⑸땲??<p>";
+        msgOfEmail += "<p>감사합니다.<p>";
         msgOfEmail += "<br>";
         msgOfEmail += "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        msgOfEmail += "<h3 style='color:blue;'>?뚯썝媛???몄쬆 肄붾뱶</h3>";
+        msgOfEmail += "<h3 style='color:blue;'>회원가입 인증 코드</h3>";
         msgOfEmail += "<div style='font-size:130%'>";
         msgOfEmail += "CODE : <strong>";
         msgOfEmail += authNum + "</strong><div><br/> ";
@@ -76,12 +76,12 @@ public class EmailService {
         return message;
     }
 
-    // 硫붿씪 諛쒖넚 + DB ???
+    // 메일 발송 + DB 저장
     public void sendEmail(String email) throws MessagingException, UnsupportedEncodingException {
         MimeMessage emailForm = createEmailForm(email);
         emailSender.send(emailForm);
 
-        // ?몄쬆 肄붾뱶 ???(5遺??좏슚)
+        // 인증 코드 저장 (5분 유효)
         EmailAuth emailAuth = EmailAuth.builder()
                 .email(email)
                 .code(authNum)
@@ -92,35 +92,35 @@ public class EmailService {
         emailAuthRepository.save(emailAuth);
     }
 
-    // ?몄쬆 肄붾뱶 寃利?
+    // 인증 코드 검증
     public void verifyCode(String email, String code) {
         EmailAuth emailAuth = emailAuthRepository.findTopByEmailOrderByIdDesc(email)
-                .orElseThrow(() -> new IllegalArgumentException("?몄쬆 肄붾뱶媛 ?놁뒿?덈떎."));
+                .orElseThrow(() -> new IllegalArgumentException("인증 코드가 없습니다."));
 
         if (emailAuth.isVerified()) {
-            throw new IllegalStateException("?대? ?몄쬆???대찓?쇱엯?덈떎.");
+            throw new IllegalStateException("이미 인증된 이메일입니다.");
         }
 
         if (emailAuth.getExpiresAt().isBefore(ChronoLocalDate.from(LocalDateTime.now()))) {
-            throw new IllegalStateException("?몄쬆 肄붾뱶媛 留뚮즺?섏뿀?듬땲??");
+            throw new IllegalStateException("인증 코드가 만료되었습니다.");
         }
 
         if (!emailAuth.getCode().equals(code)) {
-            throw new IllegalArgumentException("?몄쬆 肄붾뱶媛 ?쇱튂?섏? ?딆뒿?덈떎.");
+            throw new IllegalArgumentException("인증 코드가 일치하지 않습니다.");
         }
 
-        // ?몄쬆 ?꾨즺 泥섎━
+        // 인증 완료 처리
         emailAuth.verity();
         emailAuthRepository.save(emailAuth);
     }
 
-    // 媛?????몄쬆 ?щ? ?뺤씤
+    // 가입 전 이메일 인증 여부 확인
     public void validateVerifiedEmail(String email) {
         EmailAuth emailAuth = emailAuthRepository.findTopByEmailOrderByIdDesc(email)
-                .orElseThrow(() -> new IllegalArgumentException("?대찓???몄쬆???꾩슂?⑸땲??"));
+                .orElseThrow(() -> new IllegalArgumentException("이메일 인증이 필요합니다."));
 
         if (!emailAuth.isVerified()) {
-            throw new IllegalStateException("?대찓???몄쬆???꾨즺?섏? ?딆븯?듬땲??");
+            throw new IllegalStateException("이메일 인증이 완료되지 않았습니다.");
         }
     }
 }

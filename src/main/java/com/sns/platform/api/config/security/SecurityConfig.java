@@ -21,21 +21,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                // REST API?대?濡?basic auth 諛?csrf 蹂댁븞???ъ슜?섏? ?딆쓬
+                // REST API이므로 basic auth, csrf 보안은 사용하지 않음
                 .httpBasic().disable()
                 .csrf().disable()
-                // JWT瑜??ъ슜?섍린 ?뚮Ц???몄뀡???ъ슜?섏? ?딆쓬
+                // JWT 사용을 위해 세션 생성하지 않음
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                // ?대떦 API????댁꽌??紐⑤뱺 ?붿껌???덇?
+                // 인증 없이 접근 가능한 API
                 .requestMatchers("/users/**").permitAll()
-                // USER 沅뚰븳???덉뼱???붿껌?????덉쓬
+                // USER 권한 예시
                 //.requestMatchers("/members/test").hasRole("USER")
-                // ??諛뽰뿉 紐⑤뱺 ?붿껌????댁꽌 ?몄쬆???꾩슂濡??쒕떎???ㅼ젙
+                // 그 외 모든 요청은 허용
                 .anyRequest().permitAll()
                 .and()
-                // JWT ?몄쬆???꾪븯??吏곸젒 援ы쁽???꾪꽣瑜?UsernamePasswordAuthenticationFilter ?꾩뿉 ?ㅽ뻾
+                // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 배치
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class).build();
     }
 
