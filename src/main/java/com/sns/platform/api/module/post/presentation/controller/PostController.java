@@ -19,8 +19,8 @@ public class PostController {
     private final PostService postService;
 
     /**
-     * 寃뚯떆湲 ?곌린
-     * */
+     * 게시글 작성
+     */
     @PostMapping("/write")
     public ResponseEntity write(@Validated @RequestBody PostDTO.CreateRequest request) {
         var response = postService.write(request);
@@ -28,16 +28,16 @@ public class PostController {
     }
 
     /**
-     * 寃뚯떆湲 ?섏젙
-     * */
+     * 게시글 수정
+     */
     @PutMapping("/{id}")
     public BaseResponse<PostDTO.UpdateResponse> update(@PathVariable Long id, @Validated @RequestBody PostDTO.UpdateRequest request) {
-        return BaseResponse.success(postService.update(id,request));
+        return BaseResponse.success(postService.update(id, request));
     }
 
     /**
-     * 寃뚯떆湲 ??젣
-     * */
+     * 게시글 삭제
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
         var deletedResponse = postService.deletePost(id);
@@ -45,12 +45,11 @@ public class PostController {
     }
 
     /**
-     * 寃뚯떆湲 議고쉶
-     * */
+     * 게시글 조회
+     */
     @GetMapping("/all")
     public Page<Post> read() {
-        PageRequest pageRequest = PageRequest.of(0,5);
+        PageRequest pageRequest = PageRequest.of(0, 5);
         return postService.findAll(pageRequest);
     }
 }
-

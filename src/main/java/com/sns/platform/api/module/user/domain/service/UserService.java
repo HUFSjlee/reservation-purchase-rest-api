@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -34,22 +35,17 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final FirebaseService firebaseService;
     private final RefreshTokenRepository refreshTokenRepository;
-
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public UserDTO.CreateResponse signUp(UserDTO.CreateRequest request) throws Exception {
         var user = userMapper.toEntity(request);
 
-        if (userRepository.findByUserEmail(user.getUserEmail()).isPresent()){
-            throw new Exception("이미 가입된 이메일입니다.");
+        if (userRepository.findByUserEmail(user.getUserEmail()).isPresent()) {
+            throw new Exception("이미 가입한 이메일입니다.");
         }
 
-        // UserMapper에서 비밀번호를 암호화합니다.
-        // user.updatePassword(request.getUserPassword(), passwordEncoder);
-
         var savedMember = userRepository.save(user);
-
         return UserDTO.CreateResponse.builder()
                 .id(savedMember.getId())
                 .build();
@@ -88,12 +84,10 @@ public class UserService {
     }
 
     @Transactional
-    public String uploadAndSaveProfileImage(MultipartFile file, String nameFile, UserDTO.CreateRequest request) throws IOException, FirebaseAuthException {
+    public String uploadAndSaveProfileImage(MultipartFile file, String nameFile, UserDTO.CreateRequest request)
+            throws IOException, FirebaseAuthException {
         String imageUrl = firebaseService.uploadFiles(file, nameFile);
-
-        // 이미지 URL을 사용자 프로필에 저장
         updateProfileImage(request.getUserEmail(), imageUrl);
-
         return imageUrl;
     }
 
@@ -125,6 +119,7 @@ public class UserService {
 
         user.updatePassword(request.getUserPassword(), passwordEncoder);
         userRepository.save(user);
+
         // 비밀번호 변경 시 모든 기기 로그아웃
         refreshTokenRepository.deleteByUser_Id(user.getId());
         return userMapper.toUpdatePasswordResponse(user);
@@ -181,10 +176,4 @@ public class UserService {
             throw new IllegalStateException("토큰 해시 생성에 실패했습니다.");
         }
     }
-
 }
-
-
-
-
-
