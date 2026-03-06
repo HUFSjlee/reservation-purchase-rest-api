@@ -10,7 +10,14 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @Getter
-@Table(name = "newsfeed")
+@Table(
+        name = "newsfeed",
+        indexes = {
+                @Index(name = "idx_newsfeed_user_created_id", columnList = "user_id, created_at, id"),
+                @Index(name = "idx_newsfeed_user_type_created", columnList = "user_id, newsfeed_type, created_at"),
+                @Index(name = "idx_newsfeed_provider_created", columnList = "content_provider, created_at")
+        }
+)
 public class Newsfeed extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

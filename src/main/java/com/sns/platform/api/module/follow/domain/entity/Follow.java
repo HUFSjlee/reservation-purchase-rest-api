@@ -11,7 +11,13 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @Getter
-@Table(name = "follow")
+@Table(
+        name = "follow",
+        indexes = {
+                @Index(name = "idx_follow_follower_following", columnList = "follower, following"),
+                @Index(name = "idx_follow_following_follower", columnList = "following, follower")
+        }
+)
 public class Follow extends BaseEntity {
 
     @Id

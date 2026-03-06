@@ -19,9 +19,9 @@ public class NewsfeedController {
 
     @GetMapping
     public ResponseEntity read(@RequestParam Long userId,
-                               @RequestParam(required = false) NewsfeedType type) {
-        var response = newsfeedService.read(userId, type);
+                               @RequestParam(required = false) NewsfeedType type,
+                               @RequestParam(defaultValue = "30") Integer periodDays) {
+        var response = newsfeedService.read(userId, type, periodDays);
         return ResponseEntity.ok(BaseResponse.success(response));
     }
 }
-
